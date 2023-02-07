@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">OnePercentBetter</string>
+    <string name="home">Home</string>
+    <string name="progress">Progresso</string>
+    <string name="profile">Perfil</string>
+    <string name="edit_profile">Editar Perfil</string>
+    <string name="name">Nome</string>
+    <string name="email">Email</string>
+    <string name="password">Senha</string>
+    <string name="daily_goal">Meta diária</string>
+    <string name="delete_account">Excluir Conta</string>
+    <string name="learned">Aprendeu</string>
+    <string name="improved">Aprimorou</string>
+    <string name="title">Título</string>
+    <string name="difficulty_level">Nível de dificuldade</string>
+    <string name="description">Descrição</string>
+    <string name="date">Data</string>
+    <string name="edit">Editar</string>
+    <string name="save">Salvar</string>
+
+    <string name="accessibility_add">Adicionar Hábito</string>
+</resources>

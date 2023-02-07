@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/home"
+    app:startDestination="@id/homeFragment">
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.onepercentbetter.presenter.screens.home.HomeFragment"
+        android:label="HomeFragment" >
+        <action
+            android:id="@+id/action_homeFragment_to_itemDetailFragment"
+            app:destination="@id/itemDetailFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_itemFormFragment"
+            app:destination="@id/itemFormFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/itemDetailFragment"
+        android:name="com.example.onepercentbetter.presenter.screens.itemDetail.ItemDetailFragment"
+        android:label="ItemDetailFragment" >
+        <action
+            android:id="@+id/action_itemDetailFragment_to_itemFormFragment"
+            app:destination="@id/itemFormFragment" />
+        <argument
+            android:name="itemId"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/itemFormFragment"
+        android:name="com.example.onepercentbetter.presenter.screens.itemForm.ItemFormFragment"
+        android:label="ItemFormFragment" >
+        <argument
+            android:name="itemId"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
+
+</navigation>

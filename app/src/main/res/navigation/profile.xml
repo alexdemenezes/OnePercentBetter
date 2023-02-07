@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/profile"
+    app:startDestination="@id/profileFragment">
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.onepercentbetter.presenter.screens.profile.ProfileFragment"
+        android:label="ProfileFragment" >
+        <action
+            android:id="@+id/action_profileFragment_to_profileFormFragment"
+            app:destination="@id/profileFormFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/profileFormFragment"
+        android:name="com.example.onepercentbetter.presenter.screens.profileForm.ProfileFormFragment"
+        android:label="ProfileFormFragment" />
+
+</navigation>
