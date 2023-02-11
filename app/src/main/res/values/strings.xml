@@ -19,4 +19,7 @@
     <string name="save">Salvar</string>
 
     <string name="accessibility_add">Adicionar Hábito</string>
+    <string name="invalid_title">É necessário adicionar um título.</string>
+    <string name="saved_message">Item salvo com sucesso.</string>
+    <string name="failure_message">Não foi possível salvar o item</string>
 </resources>

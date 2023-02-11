@@ -4,5 +4,7 @@ import com.example.onepercentbetter.domain.model.item.Item
 
 data class ItemFormUiState(
     var item: Item = Item(),
-    var showInvalidFormMessage: Boolean = false
+    var showInvalidFormMessage: Boolean = false,
+    var showSuccessSnackbar: Boolean = false,
+    var showFailureSnackbar: Boolean = false,
 )

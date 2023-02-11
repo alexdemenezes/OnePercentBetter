@@ -17,17 +17,13 @@ class HomeViewModel(
         MutableLiveData<HomeUiState>(HomeUiState(itemList = emptyList()))
     }
 
-    init {
+    fun refreshItemList() {
         viewModelScope.launch {
-            refreshItemList()
-        }
-    }
-
-    private suspend fun refreshItemList() {
-        _uiState.value?.let { currentUiState ->
-            _uiState.value = currentUiState.copy(
-                itemList = getItemsByTodayUseCase.execute()
-            )
+            _uiState.value?.let { currentUiState ->
+                _uiState.value = currentUiState.copy(
+                    itemList = getItemsByTodayUseCase.execute()
+                )
+            }
         }
     }
 

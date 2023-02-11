@@ -55,6 +55,7 @@ class HomeFragment : Fragment() {
         viewModel.streamUiState().observe(viewLifecycleOwner) {state ->
             bindUiState(state)
         }
+        viewModel.refreshItemList()
     }
 
     private fun bindUiState(state: HomeUiState) {

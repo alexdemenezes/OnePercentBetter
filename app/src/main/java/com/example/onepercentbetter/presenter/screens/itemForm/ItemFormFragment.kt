@@ -9,6 +9,7 @@ import android.widget.RadioButton
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.onepercentbetter.R
 import com.example.onepercentbetter.data.database.AppDatabase
@@ -18,6 +19,8 @@ import com.example.onepercentbetter.domain.model.item.Item
 import com.example.onepercentbetter.domain.model.item.ItemDifficulty
 import com.example.onepercentbetter.domain.model.item.ItemStatus
 import com.example.onepercentbetter.domain.usecase.item.GetItemByIdUseCaseImpl
+import com.example.onepercentbetter.domain.usecase.item.SaveItemUseCaseImpl
+import com.google.android.material.snackbar.Snackbar
 
 
 class ItemFormFragment: Fragment() {
@@ -29,8 +32,9 @@ class ItemFormFragment: Fragment() {
         val appDatabase = AppDatabase.getInstance(this.requireContext())
         val itemRepository = ItemRepositoryImpl(appDatabase)
         val getItemByIdUseCase = GetItemByIdUseCaseImpl(itemRepository)
+        val saveItemUseCase = SaveItemUseCaseImpl(itemRepository)
 
-        ItemFormViewModel.Factory(args.itemId, getItemByIdUseCase)
+        ItemFormViewModel.Factory(args.itemId, getItemByIdUseCase, saveItemUseCase)
     }
 
     override fun onCreateView(
@@ -46,16 +50,25 @@ class ItemFormFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.streamUiState().observe(viewLifecycleOwner) { state ->
-            state.item?.let {
+            state.item.let {
                 if (it.title.isNotEmpty()) {
                     bindUiState(it)
                 }
             }
 
             if (state.showInvalidFormMessage) {
-                Log.d("ItemFormFragment", "solicitou mostrar mensagem")
                 showInvalidFormMessage()
                 viewModel.doneShowingInvalidFormMessage()
+            }
+
+            if(state.showSuccessSnackbar) {
+                showSuccessSnackbar()
+                viewModel.doneShowingSuccessSnackbar()
+                findNavController().navigate(ItemFormFragmentDirections.actionItemFormFragmentToHomeFragment())
+            }
+            if (state.showFailureSnackbar) {
+                showFailureSnackbar()
+                viewModel.doneShowingFailureSnackbar()
             }
         }
 
@@ -101,14 +114,30 @@ class ItemFormFragment: Fragment() {
         // call fun to validate
         if (viewModel.isValidForm()) {
             // call fun to save, show success message and navigate
+            viewModel.save()
+
         }
 
-        // if not: show error message
     }
 
     private fun showInvalidFormMessage() {
-        Log.d("ItemFormFragment", "show message")
-        val message = "É necessário adicionar um título."
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, getString(R.string.invalid_title), Toast.LENGTH_SHORT).show()
     }
+
+    private fun showSuccessSnackbar() {
+        Snackbar.make(
+            requireActivity().findViewById(android.R.id.content),
+            getString(R.string.saved_message),
+            Snackbar.LENGTH_SHORT
+        ).show()
+    }
+
+    private fun showFailureSnackbar() {
+        Snackbar.make(
+            requireActivity().findViewById(android.R.id.content),
+            getString(R.string.failure_message),
+            Snackbar.LENGTH_SHORT
+        ).show()
+    }
+
 }

@@ -10,12 +10,14 @@ import com.example.onepercentbetter.domain.model.item.Item
 import com.example.onepercentbetter.domain.model.item.ItemDifficulty
 import com.example.onepercentbetter.domain.model.item.ItemStatus
 import com.example.onepercentbetter.domain.usecase.item.GetItemByIdUseCase
+import com.example.onepercentbetter.domain.usecase.item.SaveItemUseCase
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.launch
 
 class ItemFormViewModel(
     private val itemId: String?,
-    private val getItemByIdUseCase: GetItemByIdUseCase
+    private val getItemByIdUseCase: GetItemByIdUseCase,
+    private val saveItemUseCase: SaveItemUseCase
 ) : ViewModel() {
 
     private val _uiState: MutableLiveData<ItemFormUiState> by lazy {
@@ -71,11 +73,6 @@ class ItemFormViewModel(
 
     fun isValidForm(): Boolean {
         val isValidTitle = _uiState.value?.item!!.title.isNotEmpty()
-        Log.d(
-            "ItemFormViewModel",
-            "title: ${_uiState.value?.item!!.title}, " +
-                    "isInvalid: ${!isValidTitle}"
-        )
         _uiState.value?.showInvalidFormMessage = !isValidTitle
         return isValidTitle
     }
@@ -86,17 +83,36 @@ class ItemFormViewModel(
 
 
     fun save() {
-        // will save item
-        // use case to save item on db
+        viewModelScope.launch {
+            try {
+                saveItemUseCase.execute(_uiState.value!!.item)
+                _uiState.value?.showSuccessSnackbar = true
+            } catch (err: Exception) {
+                _uiState.value?.showFailureSnackbar = true
+            }
+        }
+    }
+
+    fun doneShowingSuccessSnackbar() {
+        _uiState.value?.showSuccessSnackbar = false
+    }
+
+    fun doneShowingFailureSnackbar() {
+        _uiState.value?.showFailureSnackbar = false
     }
 
     @Suppress("UNCHECKED_CAST")
     class Factory(
         private val itemId: String?,
-        private val getItemByIdUseCase: GetItemByIdUseCase
+        private val getItemByIdUseCase: GetItemByIdUseCase,
+        private val saveItemUseCase: SaveItemUseCase
     ) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return ItemFormViewModel(itemId, getItemByIdUseCase) as T
+            return ItemFormViewModel(
+                itemId,
+                getItemByIdUseCase,
+                saveItemUseCase
+            ) as T
         }
     }
 }
