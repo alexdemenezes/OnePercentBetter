@@ -1,6 +1,7 @@
 package com.example.onepercentbetter.presenter.screens.itemForm
 
 import android.os.Bundle
+import android.text.Editable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -20,6 +21,7 @@ import com.example.onepercentbetter.domain.model.item.ItemDifficulty
 import com.example.onepercentbetter.domain.model.item.ItemStatus
 import com.example.onepercentbetter.domain.usecase.item.GetItemByIdUseCaseImpl
 import com.example.onepercentbetter.domain.usecase.item.SaveItemUseCaseImpl
+import com.example.onepercentbetter.domain.usecase.item.UpdateItemUseCaseImpl
 import com.google.android.material.snackbar.Snackbar
 
 
@@ -32,9 +34,10 @@ class ItemFormFragment: Fragment() {
         val appDatabase = AppDatabase.getInstance(this.requireContext())
         val itemRepository = ItemRepositoryImpl(appDatabase)
         val getItemByIdUseCase = GetItemByIdUseCaseImpl(itemRepository)
+        val updateItemUseCase = UpdateItemUseCaseImpl(itemRepository)
         val saveItemUseCase = SaveItemUseCaseImpl(itemRepository)
 
-        ItemFormViewModel.Factory(args.itemId, getItemByIdUseCase, saveItemUseCase)
+        ItemFormViewModel.Factory(getItemByIdUseCase, saveItemUseCase, updateItemUseCase)
     }
 
     override fun onCreateView(
@@ -50,10 +53,8 @@ class ItemFormFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.streamUiState().observe(viewLifecycleOwner) { state ->
-            state.item.let {
-                if (it.title.isNotEmpty()) {
-                    bindUiState(it)
-                }
+            if (!state.isNewItem) {
+                bindUiState(state.item)
             }
 
             if (state.showInvalidFormMessage) {
@@ -66,11 +67,14 @@ class ItemFormFragment: Fragment() {
                 viewModel.doneShowingSuccessSnackbar()
                 findNavController().navigate(ItemFormFragmentDirections.actionItemFormFragmentToHomeFragment())
             }
+            Log.d("ItemFormFragment", "show: ${state.showSuccessSnackbar}")
             if (state.showFailureSnackbar) {
                 showFailureSnackbar()
                 viewModel.doneShowingFailureSnackbar()
             }
         }
+
+        viewModel.getItemById(args.itemId)
 
         binding.Easy.setOnClickListener {  onDifficultyHandleClick(it) }
         binding.Medium.setOnClickListener { onDifficultyHandleClick(it) }
@@ -82,8 +86,18 @@ class ItemFormFragment: Fragment() {
         binding.btnSave.setOnClickListener { onSave() }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.restoreDefaultItem()
+    }
+
     private fun bindUiState(item: Item) {
-        // fill form with item info
+        binding.textInputLayoutTitle.editText?.text = Editable.Factory().newEditable(item.title)
+        val checkedDifficultyId = binding.rgDifficulty.getChildAt(item.difficulty.ordinal).id
+        binding.rgDifficulty.check(checkedDifficultyId)
+        val checkedStatusId = binding.rgStatus.getChildAt(item.status.ordinal).id
+        binding.rgStatus.check(checkedStatusId)
+        binding.textInputLayoutDescription.editText?.text = Editable.Factory().newEditable(item.description)
     }
 
     private fun onDifficultyHandleClick(view: View) {
@@ -111,11 +125,8 @@ class ItemFormFragment: Fragment() {
         viewModel.setItemTitle(binding.textInputLayoutTitle.editText?.text.toString())
         viewModel.setItemDescription(binding.textInputLayoutDescription.editText?.text.toString())
 
-        // call fun to validate
         if (viewModel.isValidForm()) {
-            // call fun to save, show success message and navigate
             viewModel.save()
-
         }
 
     }
@@ -129,7 +140,8 @@ class ItemFormFragment: Fragment() {
             requireActivity().findViewById(android.R.id.content),
             getString(R.string.saved_message),
             Snackbar.LENGTH_SHORT
-        ).show()
+        ).setBackgroundTint(resources.getColor(R.color.grey))
+            .show()
     }
 
     private fun showFailureSnackbar() {
@@ -137,7 +149,8 @@ class ItemFormFragment: Fragment() {
             requireActivity().findViewById(android.R.id.content),
             getString(R.string.failure_message),
             Snackbar.LENGTH_SHORT
-        ).show()
+        ).setBackgroundTint(resources.getColor(R.color.red))
+            .show()
     }
 
 }

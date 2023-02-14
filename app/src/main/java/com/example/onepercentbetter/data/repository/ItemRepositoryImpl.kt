@@ -1,5 +1,6 @@
 package com.example.onepercentbetter.data.repository
 
+import android.util.Log
 import com.example.onepercentbetter.data.database.AppDatabase
 import com.example.onepercentbetter.data.database.entity.toItem
 import com.example.onepercentbetter.domain.model.item.Item
@@ -16,7 +17,7 @@ class ItemRepositoryImpl(
     }
 
     override suspend fun update(item: Item) {
-        TODO("Not yet implemented")
+        appDatabase.itemDatabaseDao.update(item = item.toItemEntity())
     }
 
     override suspend fun insert(item: Item) {
@@ -24,7 +25,7 @@ class ItemRepositoryImpl(
     }
 
     override suspend fun getById(id: String): Item? {
-        TODO("Not yet implemented")
+        return appDatabase.itemDatabaseDao.getById(id).toItem()
     }
 
 }

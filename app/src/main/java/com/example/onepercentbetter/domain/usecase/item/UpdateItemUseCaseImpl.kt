@@ -1,13 +1,12 @@
 package com.example.onepercentbetter.domain.usecase.item
 
-import android.util.Log
 import com.example.onepercentbetter.data.repository.ItemRepository
 import com.example.onepercentbetter.domain.model.item.Item
 
-class GetItemByIdUseCaseImpl(
+class UpdateItemUseCaseImpl(
     private val itemRepository: ItemRepository
-): GetItemByIdUseCase {
-    override suspend fun execute(itemId: String): Item? {
-        return itemRepository.getById(itemId)
+): UpdateItemUseCase {
+    override suspend fun execute(item: Item) {
+        itemRepository.update(item)
     }
 }

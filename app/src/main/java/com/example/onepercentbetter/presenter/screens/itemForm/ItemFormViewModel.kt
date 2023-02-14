@@ -11,33 +11,33 @@ import com.example.onepercentbetter.domain.model.item.ItemDifficulty
 import com.example.onepercentbetter.domain.model.item.ItemStatus
 import com.example.onepercentbetter.domain.usecase.item.GetItemByIdUseCase
 import com.example.onepercentbetter.domain.usecase.item.SaveItemUseCase
+import com.example.onepercentbetter.domain.usecase.item.UpdateItemUseCase
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.launch
 
 class ItemFormViewModel(
-    private val itemId: String?,
     private val getItemByIdUseCase: GetItemByIdUseCase,
-    private val saveItemUseCase: SaveItemUseCase
+    private val saveItemUseCase: SaveItemUseCase,
+    private val updateItemUseCase: UpdateItemUseCase
 ) : ViewModel() {
 
     private val _uiState: MutableLiveData<ItemFormUiState> by lazy {
         MutableLiveData<ItemFormUiState>(ItemFormUiState(item = Item()))
     }
 
-    init {
-        itemId?.let {
-            viewModelScope.launch {
-                getItemById()
-            }
-        }
-    }
+    fun getItemById(itemId: String?) {
+        viewModelScope.launch {
+            var item: Item? = null
 
-    private suspend fun getItemById() {
-        var item = getItemByIdUseCase.execute(itemId!!)
-        _uiState.value?.let { currentUiState ->
-            _uiState.value = currentUiState.copy(
-                item = item ?: currentUiState.item
-            )
+            itemId?.let {
+                item = getItemByIdUseCase.execute(itemId)
+            }
+            _uiState.value?.let { currentUiState ->
+                _uiState.value = currentUiState.copy(
+                    item = item ?: currentUiState.item,
+                    isNewItem = item == null
+                )
+            }
         }
     }
 
@@ -81,15 +81,36 @@ class ItemFormViewModel(
         _uiState.value?.showInvalidFormMessage = false
     }
 
-
     fun save() {
+        if (_uiState.value?.isNewItem!!) {
+            create()
+        } else {
+            update()
+        }
+    }
+
+
+    private fun create() {
         viewModelScope.launch {
             try {
                 saveItemUseCase.execute(_uiState.value!!.item)
                 _uiState.value?.showSuccessSnackbar = true
+                Log.d("ItemFormViewModel", "showSuccess: ${_uiState.value?.showSuccessSnackbar}")
             } catch (err: Exception) {
                 _uiState.value?.showFailureSnackbar = true
             }
+        }
+    }
+
+    private fun update() {
+        viewModelScope.launch {
+            try {
+                updateItemUseCase.execute(_uiState.value?.item!!)
+                _uiState.value?.showSuccessSnackbar = true
+            } catch (err: Exception) {
+                _uiState.value?.showFailureSnackbar = true
+            }
+
         }
     }
 
@@ -101,17 +122,29 @@ class ItemFormViewModel(
         _uiState.value?.showFailureSnackbar = false
     }
 
+    fun restoreDefaultItem() {
+        _uiState.value?.let { currentUiState ->
+            _uiState.value = currentUiState.copy(
+                item = Item(),
+                isNewItem = false,
+                showSuccessSnackbar = false,
+                showInvalidFormMessage = false,
+                showFailureSnackbar = false
+            )
+        }
+    }
+
     @Suppress("UNCHECKED_CAST")
     class Factory(
-        private val itemId: String?,
         private val getItemByIdUseCase: GetItemByIdUseCase,
-        private val saveItemUseCase: SaveItemUseCase
+        private val saveItemUseCase: SaveItemUseCase,
+        private val updateItemUseCase: UpdateItemUseCase,
     ) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return ItemFormViewModel(
-                itemId,
                 getItemByIdUseCase,
-                saveItemUseCase
+                saveItemUseCase,
+                updateItemUseCase
             ) as T
         }
     }
