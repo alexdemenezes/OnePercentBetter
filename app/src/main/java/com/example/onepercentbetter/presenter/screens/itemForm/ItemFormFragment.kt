@@ -2,12 +2,14 @@ package com.example.onepercentbetter.presenter.screens.itemForm
 
 import android.os.Bundle
 import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
 import android.widget.Toast
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -57,17 +59,11 @@ class ItemFormFragment: Fragment() {
                 bindUiState(state.item)
             }
 
-            if (state.showInvalidFormMessage) {
-                showInvalidFormMessage()
-                viewModel.doneShowingInvalidFormMessage()
-            }
-
             if(state.showSuccessSnackbar) {
                 showSuccessSnackbar()
                 viewModel.doneShowingSuccessSnackbar()
                 findNavController().navigate(ItemFormFragmentDirections.actionItemFormFragmentToHomeFragment())
             }
-            Log.d("ItemFormFragment", "show: ${state.showSuccessSnackbar}")
             if (state.showFailureSnackbar) {
                 showFailureSnackbar()
                 viewModel.doneShowingFailureSnackbar()
@@ -121,18 +117,24 @@ class ItemFormFragment: Fragment() {
         }
     }
 
+    private fun validateTitleForm() {
+        val title = binding.editTextTitle.text.toString()
+        if (title.isEmpty()) {
+            binding.textInputLayoutTitle.error = getString(R.string.invalid_title)
+        } else {
+            binding.textInputLayoutTitle.error = null
+        }
+    }
+
     private fun onSave() {
         viewModel.setItemTitle(binding.textInputLayoutTitle.editText?.text.toString())
         viewModel.setItemDescription(binding.textInputLayoutDescription.editText?.text.toString())
-
-        if (viewModel.isValidForm()) {
+        validateTitleForm()
+        if (binding.textInputLayoutTitle.error.isNullOrEmpty()) {
             viewModel.save()
         }
 
-    }
 
-    private fun showInvalidFormMessage() {
-        Toast.makeText(context, getString(R.string.invalid_title), Toast.LENGTH_SHORT).show()
     }
 
     private fun showSuccessSnackbar() {

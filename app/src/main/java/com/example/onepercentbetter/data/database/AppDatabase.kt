@@ -5,16 +5,25 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.onepercentbetter.data.database.dao.ItemDatabaseDao
+import com.example.onepercentbetter.data.database.dao.ProgressDatabaseDao
+import com.example.onepercentbetter.data.database.dao.UserDatabaseDao
 import com.example.onepercentbetter.data.database.entity.ItemEntity
+import com.example.onepercentbetter.data.database.entity.ProgressEntity
+import com.example.onepercentbetter.data.database.entity.UserEntity
 
 
 @Database(
-    entities = [ItemEntity::class],
-    version = 1,
+    entities = [
+        ItemEntity::class,
+        ProgressEntity::class,
+        UserEntity::class],
+    version = 3,
     exportSchema = false
 )
 abstract class AppDatabase: RoomDatabase() {
     abstract val itemDatabaseDao: ItemDatabaseDao
+    abstract val progressDatabaseDao: ProgressDatabaseDao
+    abstract val userDatabaseDao: UserDatabaseDao
 
     companion object {
         @Volatile

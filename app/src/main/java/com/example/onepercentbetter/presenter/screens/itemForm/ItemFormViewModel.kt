@@ -71,16 +71,6 @@ class ItemFormViewModel(
         }
     }
 
-    fun isValidForm(): Boolean {
-        val isValidTitle = _uiState.value?.item!!.title.isNotEmpty()
-        _uiState.value?.showInvalidFormMessage = !isValidTitle
-        return isValidTitle
-    }
-
-    fun doneShowingInvalidFormMessage() {
-        _uiState.value?.showInvalidFormMessage = false
-    }
-
     fun save() {
         if (_uiState.value?.isNewItem!!) {
             create()
@@ -128,7 +118,6 @@ class ItemFormViewModel(
                 item = Item(),
                 isNewItem = false,
                 showSuccessSnackbar = false,
-                showInvalidFormMessage = false,
                 showFailureSnackbar = false
             )
         }
