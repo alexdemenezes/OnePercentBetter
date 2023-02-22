@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">OnePercentBetter</string>
+
+    <string name="get_started_introduction">Fique mais próximo dos seus objetivos.</string>
+    <string name="get_started_description">Torne-se 1% melhor a cada dia, concentre-se nas pequenas ações que você pode fazer hoje e se aproxime cada vez mais de onde você quer estar amanhã.</string>
     <string name="home">Home</string>
     <string name="progress">Progresso</string>
     <string name="profile">Perfil</string>
@@ -17,6 +20,8 @@
     <string name="date">Data</string>
     <string name="edit">Editar</string>
     <string name="save">Salvar</string>
+    <string name="login">Login</string>
+    <string name="register">Cadastrar</string>
 
     <string name="accessibility_add">Adicionar Hábito</string>
     <string name="invalid_title">É necessário adicionar um título.</string>

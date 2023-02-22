@@ -133,8 +133,6 @@ class ItemFormFragment: Fragment() {
         if (binding.textInputLayoutTitle.error.isNullOrEmpty()) {
             viewModel.save()
         }
-
-
     }
 
     private fun showSuccessSnackbar() {

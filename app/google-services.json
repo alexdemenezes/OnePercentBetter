@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "887066231416",
+    "project_id": "onepercentbetter-1e78f",
+    "storage_bucket": "onepercentbetter-1e78f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:887066231416:android:278a67b99cedd9b219638d",
+        "android_client_info": {
+          "package_name": "com.example.onepercentbetter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "887066231416-mrj6u205bteni32rds3d23l77b9qfsgt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.onepercentbetter",
+            "certificate_hash": "391e6a6fea66ade1bd9f8969cb491b91395ccd08"
+          }
+        },
+        {
+          "client_id": "887066231416-ngf39rh960t1s0m0jlpvob03au5g65er.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAW3cvNdCT6QUB-MpruU3dqJ6S1-5N79Kc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "887066231416-ngf39rh960t1s0m0jlpvob03au5g65er.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
