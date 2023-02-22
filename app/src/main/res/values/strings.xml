@@ -7,6 +7,7 @@
     <string name="progress">Progresso</string>
     <string name="profile">Perfil</string>
     <string name="edit_profile">Editar Perfil</string>
+    <string name="create_account">Crie uma conta</string>
     <string name="name">Nome</string>
     <string name="email">Email</string>
     <string name="password">Senha</string>
@@ -22,9 +23,14 @@
     <string name="save">Salvar</string>
     <string name="login">Login</string>
     <string name="register">Cadastrar</string>
+    <string name="full_name">Nome Completo</string>
+    <string name="btn_login_text">Entrar</string>
 
     <string name="accessibility_add">Adicionar Hábito</string>
     <string name="invalid_title">É necessário adicionar um título.</string>
     <string name="saved_message">Item salvo com sucesso.</string>
     <string name="failure_message">Não foi possível salvar o item</string>
+    <string name="login_question">Não tem uma conta? </string>
+    <string name="register_onclick">registre-se</string>
+    <string name="register_question">Já tem uma conta? Faça o </string>
 </resources>
