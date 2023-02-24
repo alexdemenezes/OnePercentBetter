@@ -86,6 +86,7 @@
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/btn_login_text"
@@ -109,6 +110,8 @@
                 android:fontFamily="@font/poppins"
                 android:textColor="@color/light_grey" />
             <TextView
+                android:id="@+id/tvRegister"
+                android:layout_marginStart="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/register_onclick"

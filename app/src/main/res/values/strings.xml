@@ -33,4 +33,5 @@
     <string name="login_question">Não tem uma conta? </string>
     <string name="register_onclick">registre-se</string>
     <string name="register_question">Já tem uma conta? Faça o </string>
+    <string name="empty_field">Campo vazio</string>
 </resources>

@@ -2,9 +2,16 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/start"
-    app:startDestination="@id/auth">
-
-    <include app:graph="@navigation/auth"/>
+    app:startDestination="@id/loadingFragment">
+    <include app:graph="@navigation/auth" />
     <include app:graph="@navigation/nav_graph" />
+    <fragment
+        android:id="@+id/loadingFragment"
+        android:name="com.example.onepercentbetter.presenter.screens.loading.LoadingFragment"
+        android:label="LoadingFragment" />
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.example.onepercentbetter.presenter.screens.main.MainFragment"
+        android:label="MainFragment" />
 
 </navigation>

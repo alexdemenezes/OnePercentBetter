@@ -6,7 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.onepercentbetter.R
 import com.example.onepercentbetter.databinding.FragmentMainBinding
@@ -21,12 +23,16 @@ class MainFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentMainBinding.inflate(inflater, container, false)
-        setupNavigation()
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupNavigation()
+    }
+
     private fun setupNavigation() {
-        val navController = findNavController(this)
+        val navController = findNavController(childFragmentManager.findFragmentById(R.id.nav_host_fragment_container) as NavHostFragment)
         binding.bottomNavBar.setupWithNavController(navController)
     }
 }

@@ -40,6 +40,8 @@
                 android:fontFamily="@font/poppins"
                 android:textColor="@color/light_grey" />
             <TextView
+                android:id="@+id/tvLogin"
+                android:layout_marginStart="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/login"
@@ -119,19 +121,25 @@
                 app:boxBackgroundColor="@android:color/transparent"
                 android:background="@android:color/transparent"
                 app:endIconMode="password_toggle"
-                app:endIconTint="@color/light_grey">
+                app:endIconTint="@color/light_grey"
+                app:counterMaxLength="12"
+                app:counterEnabled="true"
+                >
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editTextPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPassword"
                     android:hint="@string/password"
+
+                    android:maxLength="12"
                     android:fontFamily="@font/poppins"
                     android:textColor="@color/light_grey"
                     />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnRegister"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/register"
