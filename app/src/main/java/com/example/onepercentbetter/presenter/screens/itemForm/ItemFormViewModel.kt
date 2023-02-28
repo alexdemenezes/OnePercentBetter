@@ -22,54 +22,41 @@ class ItemFormViewModel(
 ) : ViewModel() {
 
     private val _uiState: MutableLiveData<ItemFormUiState> by lazy {
-        MutableLiveData<ItemFormUiState>(ItemFormUiState(item = Item()))
+        MutableLiveData<ItemFormUiState>(ItemFormUiState())
     }
+
+    private val _item: MutableLiveData<Item> = MutableLiveData(Item())
 
     fun getItemById(itemId: String?) {
         viewModelScope.launch {
             var item: Item? = null
-
             itemId?.let {
                 item = getItemByIdUseCase.execute(itemId)
             }
             _uiState.value?.let { currentUiState ->
                 _uiState.value = currentUiState.copy(
-                    item = item ?: currentUiState.item,
                     isNewItem = item == null
                 )
+            }
+            _item.value?.let {
+                _item.value = item ?: it
             }
         }
     }
 
     fun streamUiState(): LiveData<ItemFormUiState> = _uiState
+    fun streamItem(): LiveData<Item> = _item
 
-    fun setItemTitle(title: String) {
-        _uiState.value?.let { currentUiState ->
-            currentUiState.item.title = title
-            _uiState.value = currentUiState
+
+    fun setItemFields(item: Item) {
+        _item.value?.let {
+            _item.value!!.title = item.title
+            _item.value!!.description= item.description
+            _item.value!!.status= item.status
+            _item.value!!.difficulty = item.difficulty
         }
     }
 
-    fun setItemDescription(description: String) {
-        _uiState.value?.let { currentUiState ->
-            currentUiState.item.description = description
-            _uiState.value = currentUiState
-        }
-    }
-
-    fun setItemDifficult(itemDifficulty: ItemDifficulty) {
-        _uiState.value?.let { currentUiState ->
-            currentUiState.item.difficulty = itemDifficulty
-            _uiState.value = currentUiState
-        }
-    }
-
-    fun setItemStatus(itemStatus: ItemStatus) {
-        _uiState.value?.let { currentUiState ->
-            currentUiState.item.status = itemStatus
-            _uiState.value = currentUiState
-        }
-    }
 
     fun save() {
         if (_uiState.value?.isNewItem!!) {
@@ -83,9 +70,8 @@ class ItemFormViewModel(
     private fun create() {
         viewModelScope.launch {
             try {
-                saveItemUseCase.execute(_uiState.value!!.item)
+                saveItemUseCase.execute(_item.value!!)
                 _uiState.value?.showSuccessSnackbar = true
-                Log.d("ItemFormViewModel", "showSuccess: ${_uiState.value?.showSuccessSnackbar}")
             } catch (err: Exception) {
                 _uiState.value?.showFailureSnackbar = true
             }
@@ -95,7 +81,7 @@ class ItemFormViewModel(
     private fun update() {
         viewModelScope.launch {
             try {
-                updateItemUseCase.execute(_uiState.value?.item!!)
+                updateItemUseCase.execute(_item.value!!)
                 _uiState.value?.showSuccessSnackbar = true
             } catch (err: Exception) {
                 _uiState.value?.showFailureSnackbar = true
@@ -115,7 +101,6 @@ class ItemFormViewModel(
     fun restoreDefaultItem() {
         _uiState.value?.let { currentUiState ->
             _uiState.value = currentUiState.copy(
-                item = Item(),
                 isNewItem = false,
                 showSuccessSnackbar = false,
                 showFailureSnackbar = false

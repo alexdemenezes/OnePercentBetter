@@ -16,6 +16,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.onepercentbetter.R
 import com.example.onepercentbetter.data.database.AppDatabase
+import com.example.onepercentbetter.data.repository.ItemFirestoreRepositoryImpl
 import com.example.onepercentbetter.data.repository.ItemRepositoryImpl
 import com.example.onepercentbetter.databinding.FragmentItemFormBinding
 import com.example.onepercentbetter.domain.model.item.Item
@@ -32,9 +33,13 @@ class ItemFormFragment: Fragment() {
 
     private val args: ItemFormFragmentArgs by navArgs()
 
+    private var newDiff: ItemDifficulty? = null
+    private var newStatus: ItemStatus? = null
+
     private val viewModel: ItemFormViewModel by activityViewModels {
         val appDatabase = AppDatabase.getInstance(this.requireContext())
-        val itemRepository = ItemRepositoryImpl(appDatabase)
+//        val itemRepository = ItemRepositoryImpl(appDatabase)
+        val itemRepository = ItemFirestoreRepositoryImpl()
         val getItemByIdUseCase = GetItemByIdUseCaseImpl(itemRepository)
         val updateItemUseCase = UpdateItemUseCaseImpl(itemRepository)
         val saveItemUseCase = SaveItemUseCaseImpl(itemRepository)
@@ -55,9 +60,6 @@ class ItemFormFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.streamUiState().observe(viewLifecycleOwner) { state ->
-            if (!state.isNewItem) {
-                bindUiState(state.item)
-            }
 
             if(state.showSuccessSnackbar) {
                 showSuccessSnackbar()
@@ -71,6 +73,10 @@ class ItemFormFragment: Fragment() {
         }
 
         viewModel.getItemById(args.itemId)
+
+        viewModel.streamItem().observe(viewLifecycleOwner) {
+            bindUiState(it)
+        }
 
         binding.Easy.setOnClickListener {  onDifficultyHandleClick(it) }
         binding.Medium.setOnClickListener { onDifficultyHandleClick(it) }
@@ -100,9 +106,9 @@ class ItemFormFragment: Fragment() {
         if (view is RadioButton) {
             val checked = view.isChecked
             when(view.id) {
-                R.id.Easy -> if (checked) viewModel.setItemDifficult(ItemDifficulty.EASY)
-                R.id.Medium -> if (checked) viewModel.setItemDifficult(ItemDifficulty.MEDIUM)
-                R.id.Hard -> if (checked) viewModel.setItemDifficult(ItemDifficulty.HARD)
+                R.id.Easy -> if (checked) newDiff = ItemDifficulty.EASY
+                R.id.Medium -> if (checked)newDiff = ItemDifficulty.MEDIUM
+                R.id.Hard -> if (checked) newDiff = ItemDifficulty.HARD
             }
         }
     }
@@ -111,8 +117,8 @@ class ItemFormFragment: Fragment() {
         if (view is RadioButton) {
             val checked = view.isChecked
             when(view.id) {
-                R.id.Learned -> if (checked) viewModel.setItemStatus(ItemStatus.LEARNED)
-                R.id.Improved -> if (checked) viewModel.setItemStatus(ItemStatus.IMPROVED)
+                R.id.Learned -> if (checked)  newStatus = ItemStatus.LEARNED
+                R.id.Improved -> if (checked) newStatus = ItemStatus.IMPROVED
             }
         }
     }
@@ -127,8 +133,14 @@ class ItemFormFragment: Fragment() {
     }
 
     private fun onSave() {
-        viewModel.setItemTitle(binding.textInputLayoutTitle.editText?.text.toString())
-        viewModel.setItemDescription(binding.textInputLayoutDescription.editText?.text.toString())
+        val title = binding.textInputLayoutTitle.editText?.text.toString()
+        val description = binding.textInputLayoutDescription.editText?.text.toString()
+        viewModel.setItemFields(Item(
+            title = title,
+            description = description,
+            status = newStatus ?: viewModel.streamItem().value!!.status,
+            difficulty = newDiff ?: viewModel.streamItem().value!!.difficulty
+        ))
         validateTitleForm()
         if (binding.textInputLayoutTitle.error.isNullOrEmpty()) {
             viewModel.save()

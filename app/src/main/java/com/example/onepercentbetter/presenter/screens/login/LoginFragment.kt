@@ -29,7 +29,6 @@ class LoginFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.uiState.observe(viewLifecycleOwner) {
-            Log.d("LoginFragment", "entrou no observe, valor: ${it.loggedIn}")
             if (it.loggedIn) {
                 findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToMainFragment())
             }

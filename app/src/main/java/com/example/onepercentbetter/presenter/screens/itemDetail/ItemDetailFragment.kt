@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.onepercentbetter.R
 import com.example.onepercentbetter.data.database.AppDatabase
+import com.example.onepercentbetter.data.repository.ItemFirestoreRepositoryImpl
 import com.example.onepercentbetter.data.repository.ItemRepositoryImpl
 import com.example.onepercentbetter.databinding.FragmentItemDetailBinding
 import com.example.onepercentbetter.domain.model.item.Item
@@ -22,7 +23,8 @@ class ItemDetailFragment: Fragment() {
     private lateinit var binding: FragmentItemDetailBinding
     private val viewModel: ItemDetailViewModel by activityViewModels {
         val appDatabase = AppDatabase.getInstance(this.requireContext())
-        val itemRepository = ItemRepositoryImpl(appDatabase)
+//        val itemRepository = ItemRepositoryImpl(appDatabase)
+        val itemRepository = ItemFirestoreRepositoryImpl()
         val getItemByIdUseCase = GetItemByIdUseCaseImpl(itemRepository)
         ItemDetailViewModel.Factory(getItemByIdUseCase)
     }

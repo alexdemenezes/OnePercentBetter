@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.UserProfileChangeRequest
 import kotlinx.coroutines.launch
 
 class LoginViewModel : ViewModel() {
@@ -34,6 +35,7 @@ class LoginViewModel : ViewModel() {
                     _uiState.value?.email!!,
                     _uiState.value?.password!!
                 )
+                
                 _uiState.value?.let { currentUiState ->
                     _uiState.value = currentUiState.copy(loggedIn = true)
                 }

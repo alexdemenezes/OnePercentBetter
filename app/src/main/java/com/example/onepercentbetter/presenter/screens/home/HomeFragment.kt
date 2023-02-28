@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.onepercentbetter.data.database.AppDatabase
 import com.example.onepercentbetter.data.database.dao.ItemDatabaseDao
+import com.example.onepercentbetter.data.repository.ItemFirestoreRepositoryImpl
 import com.example.onepercentbetter.data.repository.ItemRepositoryImpl
 import com.example.onepercentbetter.databinding.FragmentHomeBinding
 import com.example.onepercentbetter.domain.usecase.item.GetItemsByTodayUseCaseImpl
@@ -23,7 +24,8 @@ class HomeFragment : Fragment() {
 
     private val viewModel: HomeViewModel by activityViewModels {
         val appDatabase = AppDatabase.getInstance(this.requireContext())
-        val itemRepository = ItemRepositoryImpl(appDatabase)
+//        val itemRepository = ItemRepositoryImpl(appDatabase)
+        val itemRepository = ItemFirestoreRepositoryImpl()
         val getItemsByTodayUseCase = GetItemsByTodayUseCaseImpl(itemRepository)
 
         HomeViewModel.Factory(getItemsByTodayUseCase = getItemsByTodayUseCase)

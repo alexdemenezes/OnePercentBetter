@@ -3,6 +3,7 @@ package com.example.onepercentbetter
 import android.util.Log
 import androidx.lifecycle.*
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
@@ -15,21 +16,12 @@ class MainActivityViewModel: ViewModel() {
         get() = _loggedIn
 
     fun checkLoggedInState() {
-        auth.signOut()
-        Executors.newSingleThreadScheduledExecutor().schedule({
+//        auth.signOut()
             viewModelScope.launch {
+                delay(1000)
                 _loggedIn.value = auth.currentUser != null
             }
-        },3, TimeUnit.SECONDS )
-
     }
-
-//    private suspend fun verify() {
-////        Executors.newSingleThreadScheduledExecutor().schedule({
-////            _loggedIn.value = false
-////        }, 3, TimeUnit.SECONDS)
-//        _loggedIn.value = false
-//    }
 
     @Suppress("UNCHECKED_CAST")
     class Factory: ViewModelProvider.Factory {
