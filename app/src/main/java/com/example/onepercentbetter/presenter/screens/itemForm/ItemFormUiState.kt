@@ -6,4 +6,5 @@ data class ItemFormUiState(
     var isNewItem: Boolean = true,
     var showSuccessSnackbar: Boolean = false,
     var showFailureSnackbar: Boolean = false,
+    var teste: Boolean = false
 )

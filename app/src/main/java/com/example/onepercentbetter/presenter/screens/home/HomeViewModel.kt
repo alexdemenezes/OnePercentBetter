@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.onepercentbetter.domain.usecase.item.GetItemsByTodayUseCase
+import com.example.onepercentbetter.getDayOfWeek
+import com.example.onepercentbetter.getToday
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
@@ -14,7 +16,7 @@ class HomeViewModel(
 
 
     private val _uiState: MutableLiveData<HomeUiState> by lazy {
-        MutableLiveData<HomeUiState>(HomeUiState(itemList = emptyList()))
+        MutableLiveData<HomeUiState>(HomeUiState(itemList = emptyList(), getDayOfWeek()))
     }
 
     fun refreshItemList() {

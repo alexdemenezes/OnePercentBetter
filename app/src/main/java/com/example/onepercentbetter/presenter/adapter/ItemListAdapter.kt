@@ -19,25 +19,7 @@ class ItemListAdapter(private val clickListener: (id: String) -> Unit) :
             AsyncListDiffer(this, DiffCallback)
 
     init {
-        val mockItems = listOf<Item>(
-            Item(
-                id = "example-1",
-                title = "cozinhar gyoza",
-                description = "",
-                status = ItemStatus.LEARNED,
-                difficulty = ItemDifficulty.MEDIUM,
-                createdAt = "04/02/2023"
-            ),
-            Item(
-                id = "example-2",
-                title = "kotlin",
-                description = "aprimorei kotlin",
-                status = ItemStatus.IMPROVED,
-                difficulty = ItemDifficulty.HARD,
-                createdAt = "04/02/2023"
-            )
-        )
-        asyncListDiffer.submitList(mockItems)
+        asyncListDiffer.submitList(emptyList())
     }
 
     fun updateItems(items: List<Item>) {

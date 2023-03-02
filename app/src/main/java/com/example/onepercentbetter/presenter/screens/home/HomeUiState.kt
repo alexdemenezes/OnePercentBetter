@@ -4,5 +4,6 @@ import com.example.onepercentbetter.domain.model.item.Item
 
 
 data class HomeUiState(
-    val itemList: List<Item>
+    val itemList: List<Item>,
+    val date: String
 )

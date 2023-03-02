@@ -21,11 +21,19 @@ class ItemFormViewModel(
     private val updateItemUseCase: UpdateItemUseCase
 ) : ViewModel() {
 
-    private val _uiState: MutableLiveData<ItemFormUiState> by lazy {
-        MutableLiveData<ItemFormUiState>(ItemFormUiState())
-    }
+    private val _isNewItem: MutableLiveData<Boolean> = MutableLiveData(false)
 
     private val _item: MutableLiveData<Item> = MutableLiveData(Item())
+    val item: LiveData<Item>
+        get() = _item
+
+    private val _showSuccess: MutableLiveData<Boolean> = MutableLiveData(false)
+    val showSuccess: LiveData<Boolean>
+        get() = _showSuccess
+
+    private val _showFailure: MutableLiveData<Boolean> = MutableLiveData(false)
+    val showFailure: LiveData<Boolean>
+        get() = _showFailure
 
     fun getItemById(itemId: String?) {
         viewModelScope.launch {
@@ -33,20 +41,12 @@ class ItemFormViewModel(
             itemId?.let {
                 item = getItemByIdUseCase.execute(itemId)
             }
-            _uiState.value?.let { currentUiState ->
-                _uiState.value = currentUiState.copy(
-                    isNewItem = item == null
-                )
-            }
+            _isNewItem.value = item == null
             _item.value?.let {
                 _item.value = item ?: it
             }
         }
     }
-
-    fun streamUiState(): LiveData<ItemFormUiState> = _uiState
-    fun streamItem(): LiveData<Item> = _item
-
 
     fun setItemFields(item: Item) {
         _item.value?.let {
@@ -59,7 +59,7 @@ class ItemFormViewModel(
 
 
     fun save() {
-        if (_uiState.value?.isNewItem!!) {
+        if (_isNewItem.value!!) {
             create()
         } else {
             update()
@@ -71,9 +71,9 @@ class ItemFormViewModel(
         viewModelScope.launch {
             try {
                 saveItemUseCase.execute(_item.value!!)
-                _uiState.value?.showSuccessSnackbar = true
+                _showSuccess.value = true
             } catch (err: Exception) {
-                _uiState.value?.showFailureSnackbar = true
+                _showFailure.value = true
             }
         }
     }
@@ -82,30 +82,24 @@ class ItemFormViewModel(
         viewModelScope.launch {
             try {
                 updateItemUseCase.execute(_item.value!!)
-                _uiState.value?.showSuccessSnackbar = true
+                _showSuccess.value = true
             } catch (err: Exception) {
-                _uiState.value?.showFailureSnackbar = true
+                _showFailure.value = true
             }
 
         }
     }
 
     fun doneShowingSuccessSnackbar() {
-        _uiState.value?.showSuccessSnackbar = false
+        _showSuccess.value = false
     }
 
     fun doneShowingFailureSnackbar() {
-        _uiState.value?.showFailureSnackbar = false
+        _showFailure.value = false
     }
 
     fun restoreDefaultItem() {
-        _uiState.value?.let { currentUiState ->
-            _uiState.value = currentUiState.copy(
-                isNewItem = false,
-                showSuccessSnackbar = false,
-                showFailureSnackbar = false
-            )
-        }
+        //
     }
 
     @Suppress("UNCHECKED_CAST")

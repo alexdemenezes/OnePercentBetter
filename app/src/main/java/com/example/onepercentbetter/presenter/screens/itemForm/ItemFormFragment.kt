@@ -59,14 +59,16 @@ class ItemFormFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.streamUiState().observe(viewLifecycleOwner) { state ->
-
-            if(state.showSuccessSnackbar) {
+        viewModel.showSuccess.observe(viewLifecycleOwner) {
+            if (it) {
                 showSuccessSnackbar()
                 viewModel.doneShowingSuccessSnackbar()
                 findNavController().navigate(ItemFormFragmentDirections.actionItemFormFragmentToHomeFragment())
             }
-            if (state.showFailureSnackbar) {
+        }
+
+        viewModel.showFailure.observe(viewLifecycleOwner) {
+            if (it) {
                 showFailureSnackbar()
                 viewModel.doneShowingFailureSnackbar()
             }
@@ -74,7 +76,7 @@ class ItemFormFragment: Fragment() {
 
         viewModel.getItemById(args.itemId)
 
-        viewModel.streamItem().observe(viewLifecycleOwner) {
+        viewModel.item.observe(viewLifecycleOwner) {
             bindUiState(it)
         }
 
@@ -138,8 +140,8 @@ class ItemFormFragment: Fragment() {
         viewModel.setItemFields(Item(
             title = title,
             description = description,
-            status = newStatus ?: viewModel.streamItem().value!!.status,
-            difficulty = newDiff ?: viewModel.streamItem().value!!.difficulty
+            status = newStatus ?: viewModel.item.value!!.status,
+            difficulty = newDiff ?: viewModel.item.value!!.difficulty
         ))
         validateTitleForm()
         if (binding.textInputLayoutTitle.error.isNullOrEmpty()) {

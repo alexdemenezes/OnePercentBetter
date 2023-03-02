@@ -53,6 +53,7 @@ class HomeFragment : Fragment() {
         binding.fab.setOnClickListener {
             findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToItemFormFragment())
         }
+        binding.tvDate.text = viewModel.streamUiState().value?.date
 
         viewModel.streamUiState().observe(viewLifecycleOwner) {state ->
             bindUiState(state)
